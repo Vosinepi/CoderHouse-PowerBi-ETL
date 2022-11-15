@@ -1,57 +1,41 @@
-from select import select
-import pandas as pd
-import geopandas as gpd
-import pyodbc
 
-# variables
-from credenciales_bbdd import base_de_datos_config
 
-tabla_name = "ciclovias_geo"
-# importar datos
-
-data = gpd.read_file(
-    r"C:\Users\ismael\Desktop\html\coder data\referencia_geografica_ciclovias_WGS84.geojson"
+from querys import (
+    cargar_datos_ciclovias,
+    cargar_puntos_censos_anuales,
+    cargar_puntos_censos_mensuales,
+    cargar_volumen_ciclistas_anual,
+    cargar_volumen_ciclistas_mensual,
 )
 
-gdf = gpd.GeoDataFrame(data, geometry="geometry")
-print(gdf.head())
-# conectar a base de datos
-
-conn = pyodbc.connect(**base_de_datos_config)
-cursor = conn.cursor()
 
 
-# crear tabla
+def menu():
+    print("1. Cargar datos ciclovias")
+    print("2. Cargar Puntos censales anuales")
+    print("3. Cargar Puntos censales mensuales")
+    print("4. Carga Volumen ciclista anual")
+    print("5. Cargar Volumen ciclista mensual")
+    print("6. Salir")
+    opcion = input("Ingrese una opción: ")
 
-try:
-    cursor.execute(f"select * from {tabla_name}")
-except pyodbc.ProgrammingError:
-    cursor.execute(
-        f"""
-        CREATE TABLE {tabla_name} (
-            id int IDENTITY(1,1) PRIMARY KEY,
-            codigo varchar(50),
-            nombre_oficial varchar(255),
-            longitud float,
-            barrio varchar(255),
-            geometry geometry
-        )
-        """
-    )
-    conn.commit()
+    if opcion == "1":
+        cargar_datos_ciclovias()
+    elif opcion == "2":
+        cargar_puntos_censos_anuales()
+    elif opcion == "3":
+        cargar_puntos_censos_mensuales()
+    elif opcion == "4":
+        cargar_volumen_ciclistas_anual()
+    elif opcion == "5":
+        cargar_volumen_ciclistas_mensual()
+    elif opcion == "6":
+        exit()
+    else:
+        print("Opción no válida")
+    return opcion
 
-# insertar datos
 
-for index, row in gdf.iterrows():
-    cursor.execute(
-        f"""
-        INSERT INTO {tabla_name} (codigo, nombre_oficial, longitud, barrio, geometry)
-        VALUES (?, ?, ?, ?, geometry::STGeomFromText(?, 0))
-        """,
-        row["codigo"],
-        row["nomoficial"],
-        row["long"],
-        row["BARRIO"],
-        row["geometry"].wkt,
-    )
-    conn.commit()
+if __name__ == "__main__":
+    while True:
+        menu()
