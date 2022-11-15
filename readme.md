@@ -19,6 +19,7 @@ Tener la capacidad de actualizar los datos en la base de datos al surgir nuevas 
 ## Uso
 
 - Clonar el repositorio
+- Crear un entorno virtual
 - Instalar las dependencias y cargar las credenciales de la base de datos en el archivo `credenciales_bbdd.py`
 - Ejecutar etl.py
 
