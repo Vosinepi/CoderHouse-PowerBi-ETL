@@ -1,6 +1,6 @@
 ## Iber Ismael Piovani
 
-# Pequeño ETL para guardar datos desde CSV a MsSQL
+#ETL para guardar datos desde CSV a MsSQL
 
 ## Objetivo
 
